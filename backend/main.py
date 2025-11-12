@@ -19,6 +19,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "smartexpensetracker-chi.vercel.app"
 ]
 
 app.add_middleware(

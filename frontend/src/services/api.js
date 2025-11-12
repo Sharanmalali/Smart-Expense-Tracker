@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000', // Your FastAPI backend URL
+  baseURL: 'https://smart-expense-tracker-rgbr.onrender.com', // Your FastAPI backend URL
 });
 
 // --- Axios Interceptor ---
