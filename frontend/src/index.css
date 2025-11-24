@@ -1,21 +1,71 @@
 /* frontend/src/index.css */
+
+/* --- Global Variables --- */
+:root {
+  /* Light Theme Colors (Default) */
+  --color-background-light: #f4f7f6;
+  --color-text-light: #333;
+  --color-card-light: #ffffff;
+  --color-shadow-light: rgba(0, 0, 0, 0.05);
+  
+  /* Dark Theme Colors */
+  --color-background-dark: #1f2937; /* Dark Slate Gray */
+  --color-text-dark: #e5e7eb; /* Light Gray/Off-white */
+  --color-card-dark: #374151; /* Darker Card/Form Background */
+  --color-shadow-dark: rgba(0, 0, 0, 0.5); /* Stronger dark shadow */
+  
+  /* Accent Colors */
+  --color-primary: #10b981; /* Emerald Green for primary actions */
+  --color-primary-hover: #059669;
+  --color-link: #3b82f6; /* Blue for links */
+  --color-link-hover: #2563eb;
+}
+
+/* Base Body Styles (Defaulting to Dark Theme) */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f4f7f6; /* Light gray background */
-  color: #333;
+  
+  /* Applying Dark Mode variables */
+  background-color: var(--color-background-dark);
+  color: var(--color-text-dark);
+  
+  /* Smooth transition for theme switching */
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+/* Light Theme Switcher (If you implement a toggle later) */
+body.light-mode {
+    background-color: var(--color-background-light);
+    color: var(--color-text-light);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* Global Box Sizing */
 * {
   box-sizing: border-box;
+}
+
+/* Reset for Headings and Links */
+h1, h2, h3, p {
+    margin: 0 0 1rem 0; /* Consistent bottom margin */
+}
+
+a {
+    color: var(--color-link);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--color-link-hover);
+    text-decoration: underline;
 }
