@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Dict, Any
 import models, dependencies
+from fastapi import Query
 
 router = APIRouter(
     prefix="/analysis",
@@ -120,30 +121,41 @@ def get_income_vs_expense(
         "saved": saved # This might be negative if they've overspent
     }
 
-@router.get("/monthly-trend", response_model=Dict[str, float])
-def get_monthly_expense_trend(
+@router.get("/daily-trend", response_model=Dict[str, float])
+def get_daily_expense_trend(
+    month: str = Query(..., description="Format: YYYY-MM"),
     db: Session = Depends(dependencies.get_db),
     current_user: models.User = Depends(dependencies.get_current_user)
 ):
     """
-    Calculates the total expenses for each month.
+    Returns total expenses for each DAY of the given month.
+    Example:
+    {
+        "2025-11-01": 20.5,
+        "2025-11-02": 0,
+        "2025-11-03": 50.25
+    }
     """
     df = get_expenses_dataframe(db, current_user.id)
-    
+
     if df.empty:
         return {}
-        
-    # Set the 'date' column as the index for time-series operations
-    df = df.set_index('date')
-    
-    # Resample the data by month ('M' or 'ME' for month-end) and sum the amounts
-    # This will create entries for all months between the first and last expense
-    monthly_totals = df['amount'].resample('M').sum()
-    
-    # Filter out months with zero expenses to keep the payload clean
-    monthly_totals = monthly_totals[monthly_totals > 0]
-    
-    # Format the index (e.g., '2025-11') for a clean JSON response
-    monthly_totals.index = monthly_totals.index.strftime('%Y-%m')
-    
-    return monthly_totals.to_dict()
+
+    # Ensure 'date' is datetime
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Filter for the requested month (YYYY-MM)
+    df_month = df[df['date'].dt.strftime('%Y-%m') == month]
+
+    if df_month.empty:
+        return {}
+
+    # Resample per day — sum each day's spending
+    df_month = df_month.set_index('date')
+    daily_totals = df_month['amount'].resample('D').sum()
+
+    # Ensure index formatted as YYYY-MM-DD
+    daily_totals.index = daily_totals.index.strftime('%Y-%m-%d')
+
+    # Convert to dictionary
+    return daily_totals.to_dict()

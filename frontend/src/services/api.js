@@ -77,6 +77,13 @@ export const getAnalysisSummary = () => {
   return api.get('/analysis/summary');
 };
 
+// --- Daily Trend Endpoint ---
+export const getDailyTrend = (month) => {
+  return api.get('/analysis/daily-trend', {
+    params: { month }
+  });
+};
+
 export const getAnalysisByCategory = () => {
   return api.get('/analysis/by-category');
 };

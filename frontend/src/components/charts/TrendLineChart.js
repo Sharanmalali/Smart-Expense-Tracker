@@ -4,59 +4,63 @@ import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement,
   LineElement, Title, Tooltip, Legend
 } from 'chart.js';
-import { getAnalysisMonthlyTrend } from '../../services/api';
+import { getDailyTrend } from '../../services/api';   // <-- NEW API
 
 ChartJS.register(
   CategoryScale, LinearScale, PointElement,
   LineElement, Title, Tooltip, Legend
 );
 
-const TrendLineChart = ({ height = 260 }) => {
+const TrendLineChart = ({ month, height = 260 }) => {
   const [chartData, setChartData] = useState(null);
+
+  // Default month = current month YYYY-MM
+  const selectedMonth = month || new Date().toISOString().slice(0, 7);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await getAnalysisMonthlyTrend();
-        const labels = Object.keys(res.data);
+        const res = await getDailyTrend(selectedMonth);
+
+        const labels = Object.keys(res.data).map(date => date.split("-")[2]); 
         const values = Object.values(res.data);
 
         setChartData({
           labels,
           datasets: [
             {
-              label: "Monthly Spending",
+              label: "Daily Spending",
               data: values,
-              borderColor: '#00C2A8',
+              borderColor: '#00F6D2',
               backgroundColor: (ctx) => {
                 const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
-                g.addColorStop(0, 'rgba(0,194,168,0.25)');
-                g.addColorStop(1, 'rgba(0,194,168,0.02)');
+                g.addColorStop(0, 'rgba(0,246,210,0.25)');
+                g.addColorStop(1, 'rgba(0,246,210,0.02)');
                 return g;
               },
               fill: true,
               tension: 0.25,
-              pointRadius: 4
+              pointRadius: 3,
+              pointBackgroundColor: '#00F6D2'
             }
           ]
         });
       } catch (e) {
-        console.error("Trend chart load error", e);
+        console.error("Daily trend load error", e);
       }
     };
 
     load();
-  }, []);
+  }, [selectedMonth]);
 
   if (!chartData) return <p>Loading...</p>;
 
   return (
     <div className="card">
       <div className="card-title" style={{ textAlign: 'center' }}>
-        Monthly Expense Trend
+        Daily Expense Trend ({selectedMonth})
       </div>
 
-      {/* FIX: fixed-height prevents reflow loop */}
       <div style={{ height, overflow: "hidden" }}>
         <Line
           data={chartData}
@@ -67,8 +71,14 @@ const TrendLineChart = ({ height = 260 }) => {
               tooltip: { mode: 'index', intersect: false }
             },
             scales: {
-              x: { grid: { display: false } },
-              y: { grid: { color: 'rgba(255,255,255,0.05)' } }
+              x: {
+                title: { display: true, text: "Day of Month" },
+                grid: { display: false }
+              },
+              y: {
+                title: { display: true, text: "Amount Spent" },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+              }
             }
           }}
         />
