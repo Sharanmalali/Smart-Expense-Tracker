@@ -1,71 +1,212 @@
-/* frontend/src/index.css */
+/* src/index.css - Cyber Glass (Glassmorphism + Neon Teal) */
 
-/* --- Global Variables --- */
-:root {
-  /* Light Theme Colors (Default) */
-  --color-background-light: #f4f7f6;
-  --color-text-light: #333;
-  --color-card-light: #ffffff;
-  --color-shadow-light: rgba(0, 0, 0, 0.05);
-  
-  /* Dark Theme Colors */
-  --color-background-dark: #1f2937; /* Dark Slate Gray */
-  --color-text-dark: #e5e7eb; /* Light Gray/Off-white */
-  --color-card-dark: #374151; /* Darker Card/Form Background */
-  --color-shadow-dark: rgba(0, 0, 0, 0.5); /* Stronger dark shadow */
-  
-  /* Accent Colors */
-  --color-primary: #10b981; /* Emerald Green for primary actions */
-  --color-primary-hover: #059669;
-  --color-link: #3b82f6; /* Blue for links */
-  --color-link-hover: #2563eb;
+/* === Design tokens === */
+:root{
+  --bg-dark: #060812;               /* very dark background */
+  --bg-deeper: #05060a;
+  --glass: rgba(255,255,255,0.04);  /* frosted panel */
+  --glass-strong: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.10);
+  --text-bright: #E7FDFB;
+  --muted: #98a6b0;
+  --primary: #00F6D2;    /* neon teal - slightly brighter for glow */
+  --primary-deep: #00C2A8; /* your selected teal */
+  --accent: #4A9BFF;
+  --card-radius: 14px;
+  --glass-blur: 10px;
+  --shadow-glow: 0 8px 40px rgba(0,246,210,0.12);
+  --shadow-strong: 0 18px 60px rgba(2,6,23,0.75);
+  --micro: 0.12s;
+  --soft: 0.28s;
 }
 
-/* Base Body Styles (Defaulting to Dark Theme) */
-body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  
-  /* Applying Dark Mode variables */
-  background-color: var(--color-background-dark);
-  color: var(--color-text-dark);
-  
-  /* Smooth transition for theme switching */
-  transition: background-color 0.3s, color 0.3s;
-  min-height: 100vh;
+/* === Base === */
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 20%, rgba(74,155,255,0.04), transparent 8%),
+              radial-gradient(900px 500px at 90% 80%, rgba(0,246,210,0.03), transparent 8%),
+              linear-gradient(180deg,var(--bg-dark) 0%,var(--bg-deeper) 100%);
+  color:var(--text-bright);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition: background .35s ease, color .25s ease;
+  padding-bottom:28px;
 }
 
-/* Light Theme Switcher (If you implement a toggle later) */
-body.light-mode {
-    background-color: var(--color-background-light);
-    color: var(--color-text-light);
+/* Links */
+a{ color:var(--accent); text-decoration:none; transition: color var(--micro) ease; }
+a:hover{ color: #7fb1ff; text-decoration: underline; }
+
+/* Utilities */
+.container{ max-width:1200px; margin:0 auto; padding:28px; }
+.small-muted{ color:var(--muted); font-size:0.92rem; }
+
+/* === Glass Card System === */
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: var(--card-radius);
+  padding: 18px;
+  box-shadow: var(--shadow-strong), var(--shadow-glow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  transition: transform var(--soft) cubic-bezier(.15,.9,.25,1), box-shadow var(--micro), border-color var(--micro);
+  position: relative;
+  overflow: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+/* Glass hover "lift" with glow intensification */
+.card:hover{
+  transform: translateY(-6px) scale(1.006);
+  box-shadow: 0 28px 80px rgba(0,0,0,0.7), 0 0 40px rgba(0,246,210,0.15);
+  border-color: var(--glass-border);
 }
 
-/* Global Box Sizing */
-* {
-  box-sizing: border-box;
+/* Card title */
+.card-title{ font-size:1.2rem; font-weight:700; color:var(--text-bright); margin-bottom:10px; }
+
+/* Inner accent strip (subtle) */
+.card::before{
+  content: "";
+  position: absolute;
+  left: -120px;
+  top: -60px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle at 40% 30%, rgba(0,246,210,0.04), transparent 35%);
+  transform: rotate(18deg);
+  pointer-events:none;
 }
 
-/* Reset for Headings and Links */
-h1, h2, h3, p {
-    margin: 0 0 1rem 0; /* Consistent bottom margin */
+/* === Buttons (pill + neon) === */
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 16px; border-radius:999px; font-weight:700;
+  cursor:pointer; border:1px solid transparent; user-select:none;
+  transition: transform var(--micro) ease, box-shadow var(--micro), background .12s;
 }
 
-a {
-    color: var(--color-link);
-    text-decoration: none;
-    transition: color 0.2s;
+.btn:active{ transform: scale(.987); }
+
+/* Primary neon */
+.btn-primary{
+  background: linear-gradient(180deg, var(--primary), var(--primary-deep));
+  color: #051411;
+  box-shadow: 0 8px 30px rgba(0,246,210,0.12), 0 2px 6px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.btn-primary:hover{
+  box-shadow: 0 12px 48px rgba(0,246,210,0.18), 0 4px 10px rgba(0,0,0,0.45);
+  transform: translateY(-3px);
 }
 
-a:hover {
-    color: var(--color-link-hover);
-    text-decoration: underline;
+/* Outline variant */
+.btn-outline{
+  background: transparent; color: var(--primary);
+  border: 1px solid rgba(0,246,210,0.12);
+  box-shadow: inset 0 0 0 1px rgba(0,246,210,0.02);
+}
+.btn-outline:hover{
+  background: rgba(0,246,210,0.03); color: var(--text-bright);
+  box-shadow: 0 10px 30px rgba(0,246,210,0.06);
+}
+
+/* Danger */
+.btn-danger{ background: linear-gradient(180deg,#ef4444,#e02f2f); color:white; }
+
+/* === Inputs + icons === */
+.input-with-icon{ position:relative; }
+.input-with-icon .icon{
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  font-size:16px; opacity:0.95;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+.input-with-icon input,
+.input-with-icon textarea,
+.input-with-icon select{
+  width:100%; padding:12px 14px 12px 44px; border-radius:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border:1px solid rgba(255,255,255,0.03); color:var(--text-bright);
+  transition: box-shadow var(--micro), border-color var(--micro), transform var(--micro);
+}
+.input-with-icon input:focus,
+.input-with-icon textarea:focus,
+.input-with-icon select:focus{
+  outline:none; border-color: rgba(0,246,210,0.6);
+  box-shadow: 0 8px 30px rgba(0,246,210,0.08);
+  transform: translateY(-2px);
+}
+
+/* small helper text for inputs */
+.input-hint{ font-size:0.85rem; color:var(--muted); margin-top:8px; }
+
+/* date input cosmetic */
+input[type="date"]{ appearance:none; background:transparent; }
+
+/* === Tables === */
+.expense-table{ width:100%; border-collapse:collapse; font-size:0.95rem; border-radius:10px; overflow:hidden; }
+.expense-table th, .expense-table td{ padding:12px 10px; border-bottom:1px solid rgba(255,255,255,0.03); text-align:left; }
+.expense-table thead th{ color:var(--primary); font-weight:700; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
+.expense-row{ transition: background .12s ease, transform .12s ease; }
+.expense-row:hover{ background: rgba(0,246,210,0.02); transform: translateY(-4px); }
+
+/* receipt thumbnail */
+.receipt-thumb{ width:56px; height:42px; object-fit:cover; border-radius:8px; border:1px solid rgba(255,255,255,0.04); cursor:pointer; transition: transform .12s; }
+.receipt-thumb:hover{ transform: scale(1.03); box-shadow: 0 12px 30px rgba(0,246,210,0.06); }
+
+/* modal overlay used by ReceiptModal */
+.react-modal-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(6,8,12,0.6); z-index:9999; }
+.react-modal-card{ width:92%; max-width:980px; border-radius:14px; padding:18px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); box-shadow:var(--shadow-strong); }
+
+/* === Cards specific to charts: rounded inner container */
+.chart-frame{
+  border-radius:12px;
+  padding:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* summary stat boxes row */
+.summary-row{ display:flex; gap:16px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.stat-box{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  min-width:160px; padding:14px; border-radius:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transition: transform var(--micro) ease, box-shadow var(--micro);
+}
+.stat-box:hover{ transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+
+/* small muted */
+.small-muted{ color:var(--muted); font-size:0.9rem; }
+
+/* === Animations: entrance & micro interactions === */
+@keyframes floatUp {
+  from{ transform: translateY(8px); opacity:0; }
+  to{ transform: translateY(0); opacity:1; }
+}
+.fade-in{ animation: floatUp .55s cubic-bezier(.2,.9,.25,1) both; }
+
+.pulse {
+  animation: pulseGlow 2.4s infinite;
+}
+@keyframes pulseGlow {
+  0% { box-shadow: 0 6px 20px rgba(0,246,210,0.06); transform: translateY(0); }
+  50% { box-shadow: 0 18px 48px rgba(0,246,210,0.12); transform: translateY(-3px); }
+  100% { box-shadow: 0 6px 20px rgba(0,246,210,0.06); transform: translateY(0); }
+}
+
+/* === Responsive tweaks === */
+@media (max-width: 980px){
+  .container{ padding:18px; }
+  .summary-row{ gap:12px; }
+  .stat-box{ min-width: 140px; }
+}
+@media (max-width: 720px){
+  .expense-table th, .expense-table td{ padding:10px 8px; font-size:0.92rem; }
+  .receipt-thumb{ width:48px; height:36px; }
 }

@@ -3,51 +3,68 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getAnalysisByCategory } from '../../services/api';
 
-// Register the components we need for a Pie chart
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CategoryPieChart = () => {
+const colorPalette = [
+  '#FF86A1', '#00C2A8', '#4A90E2',
+  '#9B7BFF', '#FFB86B', '#7EE6C6',
+];
+
+const CategoryPieChart = ({ height = 240 }) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const load = async () => {
       try {
-        const response = await getAnalysisByCategory();
-        const data = response.data;
-        
-        const labels = Object.keys(data);
-        const values = Object.values(data);
+        const res = await getAnalysisByCategory();
+        const labels = Object.keys(res.data);
+        const values = Object.values(res.data);
 
         setChartData({
-          labels: labels,
+          labels,
           datasets: [
             {
-              label: 'Amount Spent',
               data: values,
-              backgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
-                '#4BC0C0',
-                '#9966FF',
-                '#FF9F40',
-              ],
-            },
-          ],
+              backgroundColor: labels.map((_, i) => colorPalette[i % colorPalette.length]),
+              borderColor: '#0b1220',
+              borderWidth: 2
+            }
+          ]
         });
-      } catch (error) {
-        console.error("Failed to fetch category data:", error);
+      } catch (e) {
+        console.error("Pie chart load error", e);
       }
     };
-    fetchData();
+    load();
   }, []);
 
-  if (!chartData) return <p>Loading category chart...</p>;
+  if (!chartData) return <p>Loading...</p>;
 
   return (
-    <div style={{ height: '300px', width: '300px' }}>
-      <h3>Spending by Category</h3>
-      <Pie data={chartData} />
+    <div className="card">
+      <div className="card-title">Spending by Category</div>
+
+      {/* FIX: fixed-height container prevents reflow + auto scroll */}
+      <div style={{ height, overflow: 'hidden' }}>
+        <Pie
+          data={chartData}
+          options={{
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = ((ctx.raw / total) * 100).toFixed(1);
+                    return `${ctx.label}: $${ctx.raw} (${pct}%)`;
+                  }
+                }
+              }
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };

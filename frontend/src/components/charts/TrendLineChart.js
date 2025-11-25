@@ -1,65 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
+  Chart as ChartJS, CategoryScale, LinearScale, PointElement,
+  LineElement, Title, Tooltip, Legend
 } from 'chart.js';
 import { getAnalysisMonthlyTrend } from '../../services/api';
 
-// Register components for a Line chart
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+  CategoryScale, LinearScale, PointElement,
+  LineElement, Title, Tooltip, Legend
 );
 
-const TrendLineChart = () => {
+const TrendLineChart = ({ height = 260 }) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const load = async () => {
       try {
-        const response = await getAnalysisMonthlyTrend();
-        const data = response.data;
-        
-        const labels = Object.keys(data); // e.g., ["2025-10", "2025-11"]
-        const values = Object.values(data);
+        const res = await getAnalysisMonthlyTrend();
+        const labels = Object.keys(res.data);
+        const values = Object.values(res.data);
 
         setChartData({
-          labels: labels,
+          labels,
           datasets: [
             {
-              label: 'Total Spent per Month',
+              label: "Monthly Spending",
               data: values,
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1,
-            },
-          ],
+              borderColor: '#00C2A8',
+              backgroundColor: (ctx) => {
+                const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
+                g.addColorStop(0, 'rgba(0,194,168,0.25)');
+                g.addColorStop(1, 'rgba(0,194,168,0.02)');
+                return g;
+              },
+              fill: true,
+              tension: 0.25,
+              pointRadius: 4
+            }
+          ]
         });
-      } catch (error) {
-        console.error("Failed to fetch trend data:", error);
+      } catch (e) {
+        console.error("Trend chart load error", e);
       }
     };
-    fetchData();
+
+    load();
   }, []);
 
-  if (!chartData) return <p>Loading trend chart...</p>;
+  if (!chartData) return <p>Loading...</p>;
 
   return (
-    <div style={{ height: '300px', width: '600px' }}>
-      <h3>Monthly Expense Trend</h3>
-      <Line data={chartData} />
+    <div className="card">
+      <div className="card-title" style={{ textAlign: 'center' }}>
+        Monthly Expense Trend
+      </div>
+
+      {/* FIX: fixed-height prevents reflow loop */}
+      <div style={{ height, overflow: "hidden" }}>
+        <Line
+          data={chartData}
+          options={{
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };

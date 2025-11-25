@@ -39,7 +39,7 @@ const RegisterForm = () => {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.g.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>

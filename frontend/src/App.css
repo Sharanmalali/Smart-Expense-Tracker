@@ -1,70 +1,40 @@
-/* frontend/src/App.css */
+/* src/App.css - supporting styles for the Cyber theme */
 
 .App {
-  text-align: center;
-}
-
-/* --- Authentication Container --- */
-.auth-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Inherits background/text color from index.css body */
+  display:flex;
+  flex-direction:column;
 }
 
-.auth-form-wrapper {
-  /* Using Dark Mode variables for the card appearance */
-  background: var(--color-card-dark);
-  color: var(--color-text-dark);
-  
-  padding: 3rem 2.5rem; /* Increased padding for a spacious look */
-  border-radius: 12px; /* Modern, slightly larger radius */
-  
-  /* Modern elevated shadow */
-  box-shadow: 0 10px 25px var(--color-shadow-dark);
-  
-  width: 100%;
-  max-width: 420px; /* Slightly wider form */
-  
-  /* Added border for subtle definition in dark mode */
-  border: 1px solid rgba(255, 255, 255, 0.05); 
-  
-  transition: all 0.3s ease-in-out; /* Smooth transition */
+/* Auth container - floating card centered */
+.auth-container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 36px;
+  background: radial-gradient(600px 300px at 10% 10%, rgba(74,155,255,0.02), transparent);
 }
 
-/* --- Component Specific Styling Enhancements --- */
-
-.logo-title {
-  font-size: 2.25rem; /* Larger, bolder title */
-  font-weight: 800;
-  color: var(--color-primary); /* Use accent color for branding */
-  margin-bottom: 0.5rem;
+.auth-form-wrapper{
+  width:100%;
+  max-width:460px;
+  border-radius:14px;
+  padding:32px;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  transition: transform .18s ease, box-shadow .18s ease;
 }
+.auth-form-wrapper:hover{ transform: translateY(-6px); box-shadow: 0 26px 90px rgba(0,0,0,0.75); }
 
-.subtitle {
-    font-size: 1rem;
-    color: var(--color-text-dark);
-    opacity: 0.7;
-    margin-bottom: 2rem;
-}
+/* Logo/title */
+.logo-title{ font-size:2rem; color:var(--primary); font-weight:800; margin-bottom:6px; letter-spacing:0.6px; }
+.subtitle{ color:var(--muted); margin-bottom:18px; }
 
-.auth-link {
-  margin-top: 1.5rem;
-  font-size: 0.95rem;
-  color: var(--color-text-dark);
-}
+/* Auth link style */
+.auth-link{ margin-top:14px; font-size:0.95rem; color:var(--muted); }
+.link-text{ color:var(--accent); font-weight:700; }
 
-.auth-link .link-text {
-    font-weight: 600;
-    color: var(--color-link);
-}
-
-
-/* NOTE: You should also update your LoginForm CSS (AuthForms.css) 
-   to use the CSS variables like:
-   - Inputs with 'var(--color-card-dark)' background, 
-     'var(--color-text-dark)' text, and a primary color border focus.
-   - The primary submit button using 'var(--color-primary)' background.
-*/
+/* Tiny utility */
+.center { display:flex; align-items:center; justify-content:center; }

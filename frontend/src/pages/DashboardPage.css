@@ -1,238 +1,73 @@
-/* frontend/src/pages/DashboardPage.css */
-
-/*
-  NOTE: This CSS assumes the global CSS variables 
-  (--color-primary, --color-background-dark, --color-card-dark, etc.) 
-  from your index.css are available.
-*/
+/* src/pages/DashboardPage.css - updated grid, spacing, card visuals */
 
 .dashboard-container {
-    /* Full width container, background inherited from body (dark) */
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .dashboard-content-wrapper {
-    max-width: 1400px; /* Wider view for better data presentation */
-    margin: 0 auto;
-    padding: 2rem 2.5rem; /* Increased padding */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px;
 }
 
-/* --- Header Section --- */
-
+/* header */
 .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    /* Subtle separation line */
-    border-bottom: 1px solid var(--color-card-dark); 
-    padding-bottom: 1.5rem;
-    margin-bottom: 3rem; /* More vertical spacing */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  margin-bottom: 28px;
 }
+.welcome-message { font-size: 1.8rem; color: var(--color-text-dark); }
 
-.welcome-message {
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--color-text-dark); /* Light text on dark background */
-}
+.nav-links { display:flex; gap:12px; align-items:center; }
 
-.nav-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-/* --- General Button Styles (Applied to header and forms) --- */
-.btn {
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none; /* For link buttons */
-    display: inline-block;
-    text-align: center;
-}
-
-.btn-secondary {
-    color: var(--color-primary);
-    background-color: transparent;
-    border: 2px solid var(--color-primary);
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-primary);
-    color: var(--color-card-dark);
-}
-
-.btn-primary-danger {
-    background-color: #ef4444; /* Red color */
-    color: white;
-    border: 2px solid #ef4444;
-}
-
-.btn-primary-danger:hover {
-    background-color: #dc2626;
-    border-color: #dc2626;
-}
-
-/* --- Dashboard Grid Layout --- */
-
+/* Grid layout */
 .dashboard-grid {
-    display: grid;
-    /* Adjusted grid: Inputs take up less space, list takes more */
-    grid-template-columns: 1.2fr 2fr; 
-    gap: 2.5rem; /* Increased gap */
+  display: grid;
+  grid-template-columns: 1.15fr 1.9fr;
+  gap: 28px;
+  align-items: start;
 }
 
-/* --- Card Styles (For IncomeUpdater, AddExpenseForm, ExpenseList) --- */
+/* Input column – vertical stacking with breathing room */
+.input-column { display:flex; flex-direction:column; gap:20px; }
 
-.card {
-    /* Using Dark Mode Card variables */
-    background: var(--color-card-dark); 
-    color: var(--color-text-dark);
-    padding: 2rem;
-    border-radius: 10px; /* Modern radius */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Stronger dark shadow */
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border for definition */
+/* Card tweaks */
+.card { padding: 20px; border-radius: 12px; }
+.card .card-title { font-size: 1.15rem; color: var(--color-text-dark); }
+
+/* Expense list card specifics */
+.expense-list-card { overflow-x:auto; padding: 16px; }
+
+/* Buttons */
+.btn-inline {
+  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
 }
 
-.card-title {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 0.75rem;
+/* Summary small top area to show monthly summary bar */
+.monthly-summary {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+}
+.summary-text { font-weight:600; color: var(--color-muted); }
+
+/* Filters row */
+.filters-row {
+  display:flex; gap:10px; align-items:center; margin-bottom: 12px;
 }
 
-/* --- Form and Input Styles (Applies to all forms within cards) --- */
+/* Loading & error messages */
+.error-message { color: #ffb4b4; background: rgba(255,0,0,0.03); padding:8px;border-radius:8px; }
+.loading-message { opacity:0.8; text-align:center; padding:18px; }
 
-.card form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.card form div {
-    display: flex;
-    flex-direction: column;
-}
-
-.card form label {
-    margin-bottom: 0.4rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--color-text-dark);
-    opacity: 0.8;
-}
-
-.card form input,
-.card form select,
-.card form button {
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.2s;
-}
-
-.card form input,
-.card form select {
-    background-color: #4b5563; /* Slightly lighter dark background for contrast */
-    border: 1px solid #6b7280;
-    color: var(--color-text-dark);
-}
-
-.card form input:focus,
-.card form select:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3); /* Primary glow on focus */
-    outline: none;
-}
-
-.card form button[type="submit"] {
-    color: white;
-    background-color: var(--color-primary);
-    cursor: pointer;
-    border: none;
-    margin-top: 0.5rem;
-}
-
-.card form button[type="submit"]:hover {
-    background-color: var(--color-primary-hover);
-}
-
-/* --- Expense List Table --- */
-.expense-list-card {
-    /* Ensure the table fills the card */
-    overflow-x: auto; 
-}
-
-.expense-table {
-    width: 100%;
-    border-collapse: separate; /* Use separate for rounded corners */
-    border-spacing: 0;
-    font-size: 0.95rem;
-}
-
-.expense-table th,
-.expense-table td {
-    padding: 1.1rem 1.2rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.expense-table th {
-    /* Slightly darker header for contrast */
-    background-color: #374151; 
-    font-weight: 600;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    font-size: 0.8rem;
-}
-
-/* Styling for table corners */
-.expense-table th:first-child { border-top-left-radius: 8px; }
-.expense-table th:last-child { border-top-right-radius: 8px; }
-
-.expense-table tr:hover td {
-    background-color: #3e4856; /* Subtle row hover effect */
-}
-
-.expense-table td .receipt-link {
-    color: var(--color-link);
-    font-weight: 500;
-}
-
-.expense-table td .delete-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-    color: #ef4444; /* Red text */
-    background: none;
-    border: 1px solid #ef4444;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.expense-table td .delete-btn:hover {
-    background-color: #ef4444;
-    color: white;
-}
-
-.error-message {
-    color: #f87171;
-    padding: 1rem;
-    background: #4b5563;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-}
-
-.loading-message {
-    text-align: center;
-    font-style: italic;
-    opacity: 0.7;
+/* Responsive tweak */
+@media (max-width: 880px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .nav-links { flex-wrap: wrap; gap: 8px; }
 }
